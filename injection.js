@@ -3,7 +3,9 @@ function setStore(item, val) { window.sessionStorage.setItem(item, JSON.stringif
 function getStore(item) { return JSON.parse(window.sessionStorage.getItem(item)) }
 
 //replaces side search with text area for entry
-document.getElementById('cardName-collapsable').innerHTML = '<textarea id="decklist" style="width: 100%; height: 300px;"></textarea> <button style="width:100%" onclick="subForm()">Search</button>';
+document.getElementById('cardName-collapsable').innerHTML = '<textarea id="decklist" style="width: 100%;height: 350px;resize: vertical;border: none;padding-left: 7px;padding-top: 5px;"></textarea> <button onclick="subForm()" style="width: 100%; height: 30px; background-color: #194f8f; border: none; border-radius: 7px; color: white; font-size: 1.5rem; font-family: Open Sans,sans-serif;">Search</button>'
+//Set filter to price low to high
+document.querySelector('#results-change-view > div:nth-child(3) > select > option:nth-child(2)').selected = true
 
 document.getElementById('decklist').value = getStore('currentList')
 
