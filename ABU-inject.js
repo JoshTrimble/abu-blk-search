@@ -1,29 +1,33 @@
-//functions to set session stores to persist data past webpage changes
 function setStore(item, val) { window.sessionStorage.setItem(item, JSON.stringify(val)) }
 function getStore(item) { return JSON.parse(window.sessionStorage.getItem(item)) }
 
+window.location.hash !== '' ? setStore('currentList', atob(document.location.hash.replace('#',''))) : null 
+
 //replaces side search with text area for entry
 document.getElementById('cardName-collapsable').innerHTML = '<textarea id="decklist" style="width: 100%;height: 350px;resize: vertical;border: none;padding-left: 7px;padding-top: 5px;"></textarea> <button onclick="subForm()" style="width: 100%; height: 30px; background-color: #194f8f; border: none; border-radius: 7px; color: white; font-size: 1.5rem; font-family: Open Sans,sans-serif;">Search</button>'
+
 //Set filter to price low to high
 document.querySelector('#results-change-view > div:nth-child(3) > select > option:nth-child(2)').selected = true
 
+//Fills the search area with the most recently pasted decklist
 document.getElementById('decklist').value = getStore('currentList')
 
 const nextCard = getStore('cardArr') != getStore('cardsToSearch').length-1 ? `href="/magic-the-gathering/singles?search=${getStore('cardsToSearch')[getStore('cardArr')+1]}"` : 'href="https://abugames.com/cartview/shop"'
 const prevCard = getStore('cardArr') == 0 ?  `href="/magic-the-gathering/singles?search=${getStore('cardsToSearch')[getStore('cardArr')]}"` : `href="/magic-the-gathering/singles?search=${getStore('cardsToSearch')[getStore('cardArr')-1]}"` 
 
 function subForm() {
-
-    //stores cards without numbers to pass through the url to search
-    setStore('cardsToSearch', [])
-
+    document.getElementById('decklist').value =document.getElementById('decklist').value.replace(/\n\n/g, '\n').trim()
     //store the most recently entered decklist
     setStore('currentList', document.getElementById('decklist').value)
 
     //splits cards by line and adds only names to "cardsToSearch"
     setStore('cardQty', document.getElementById('decklist').value.split('\n'))
     setStore('cardsToSearch', getStore('cardQty').map(x => x.replace(/[0-9]/g, '').trim()))
-
+    
+    if (document.getElementById('cardstyle-1').checked == true){
+    setStore('cardsToSearch', getStore('cardsToSearch').map(x => x += '&card_style=%5B%22Foil%22%5D'))
+    }
+    
     setStore('cardArr', 0)
     window.location.href = `https://abugames.com/magic-the-gathering/singles?search=${getStore('cardsToSearch')[getStore('cardArr')]}`
 }
